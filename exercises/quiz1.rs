@@ -13,10 +13,15 @@
 //
 // No hints this time ;)
 
-// I AM NOT DONE
-
 // Put your function here!
-// fn calculate_price_of_apples {
+const BULK: usize = 40;
+fn calculate_price_of_apples(num: usize) -> usize {
+    if num > BULK {
+        num * 1
+    } else {
+        num * 2
+    }
+}
 
 // Don't modify this function!
 #[test]
