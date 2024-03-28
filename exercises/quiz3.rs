@@ -16,18 +16,38 @@
 //
 // Execute `rustlings hint quiz3` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
+use std::fmt::Display;
 
+/*
+// This works too, but it requires to add a "Box::new(type)" when instantiating the struct
+// This might be a preferred approach if we don't mind updating the API usage to create Box
+// references to the type that implements the Display trait. Otherwise, we might have to consider
+// how we handle implementations for the struct where the generic type is not bound to the Display
+// trait.
 pub struct ReportCard {
-    pub grade: f32,
+    pub grade: Box<dyn Display>,
     pub student_name: String,
     pub student_age: u8,
 }
 
 impl ReportCard {
-    pub fn print(&self) -> String {
+    fn print(&self) -> String {
         format!("{} ({}) - achieved a grade of {}",
-            &self.student_name, &self.student_age, &self.grade)
+            &self.student_name, &self.student_age, &self.grade.to_string())
+    }
+}
+*/
+
+pub struct ReportCard<T: Display> {
+    pub grade: T,
+    pub student_name: String,
+    pub student_age: u8,
+}
+
+impl<T: Display> ReportCard<T> {
+    fn print(&self) -> String {
+        format!("{} ({}) - achieved a grade of {}",
+            &self.student_name, &self.student_age, &self.grade.to_string())
     }
 }
 
@@ -39,6 +59,7 @@ mod tests {
     fn generate_numeric_report_card() {
         let report_card = ReportCard {
             grade: 2.1,
+            //grade: Box::new(2.1),
             student_name: "Tom Wriggle".to_string(),
             student_age: 12,
         };
@@ -52,7 +73,8 @@ mod tests {
     fn generate_alphabetic_report_card() {
         // TODO: Make sure to change the grade here after you finish the exercise.
         let report_card = ReportCard {
-            grade: 2.1,
+            grade: "A+",
+            //grade: Box::new("A+"),
             student_name: "Gary Plotter".to_string(),
             student_age: 11,
         };
