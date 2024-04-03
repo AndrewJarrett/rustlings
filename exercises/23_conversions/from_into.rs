@@ -41,10 +41,45 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
-
 impl From<&str> for Person {
-    fn from(s: &str) -> Person {}
+    fn from(s: &str) -> Person {
+        s.split_once(",") // Only allow one comma
+            .filter(|(name, age)| !name.is_empty()) // Removes an emmpty name
+            .map(|(name, age)| {
+                age.parse().map(|age| Person { // Map the parse result into returning a person
+                    name: name.into(), // Convert &str to String
+                    age,
+                }).ok() // Return the Ok result
+            })
+            .flatten() // Nested Option -> Single Option
+            .unwrap_or_default() // Get the some value or return the default person if error
+
+        /*
+        let mut name = Person { ..Default::default() }.name;
+        let mut age = Person { ..Default::default() }.age;
+
+        if s.len() != 0 {
+            let iter = s.split(",");
+            if iter.count() == 2 {
+                let mut count = 0;
+                for elem in s.split(",") {
+                    if count == 0 {
+                        if elem.len() > 0 {
+                            name = elem.to_string();
+                        } else {
+                            break;
+                        }
+                    } else if count == 1 {
+                        return elem.parse().map_or_else(|_| return Person { ..Default::default() }, |age| Person { name, age });
+                    }
+                    count += 1;
+                }
+            }
+        }
+
+        Person { name, age }
+        */
+    }
 }
 
 fn main() {
